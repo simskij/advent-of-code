@@ -12,6 +12,7 @@ import day08.solution as day08
 import day09.solution as day09
 import day10.solution as day10
 import day11.solution as day11
+import day12.solution as day12
 
 
 def init_argparse() -> argparse.ArgumentParser:
@@ -38,7 +39,8 @@ def main():
         8: day08.solve,
         9: day09.solve,
         10: day10.solve,
-        11: day11.solve
+        11: day11.solve,
+        12: day12.solve
     }
 
     if not args.day:
