@@ -2,6 +2,10 @@
 from pathlib import Path
 import math
 
+from matplotlib import pyplot as plt
+from matplotlib import animation
+from os.path import expanduser
+
 path = Path(__file__).parent / "input.txt"
 
 
@@ -16,10 +20,12 @@ NEIGHBOURS = (
     (1, 1)
 )
 
+animate =  False
 
 def solve() -> (int, int):
     """Day 11: Dumbo Octopus"""
 
+    states = []
     board = []
     gold = 0
 
@@ -66,10 +72,33 @@ def solve() -> (int, int):
 
                 if board[adjacent_y][adjacent_x] > 9:
                     flashing.append([adjacent_y, adjacent_x])
-
+        if animate:
+            states.append([[col for col in row] for row in board])
         if step <= 100:
             silver += len(flashed)
         if len(flashed) == height * width:
             gold = step
 
+    if animate:
+        animate_states(states)
+
     return silver, gold
+
+
+def animate_states(states):
+    fig = plt.figure()
+    im = plt.imshow(states[0], animated=True, cmap="copper")
+
+    def animation_func(frame):
+        im.set_array(frame)
+        return im
+
+    anim = animation.FuncAnimation(
+            fig,
+            animation_func,
+            blit=True,
+            interval=100,
+            frames=states
+    )
+    anim.save(f"{expanduser('~')}/day-11-animation.mp4")
+

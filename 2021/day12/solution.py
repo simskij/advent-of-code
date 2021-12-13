@@ -31,14 +31,26 @@ def solve() -> (int, int):
 
 
 def travel(current, visited, rooms, allow_twice=False) -> int:
+    candidates = [["start", [], allow_twice]]
     total = 0
-    for option in rooms[current]:
-        if option == "start":
-            continue
-        elif option == "end":
-            total += 1
-        elif option not in visited or option.isupper():
-            total += travel(option, visited + [current], rooms, allow_twice)
-        elif not option.isupper() and allow_twice:
-            total += travel(option, visited + [current], rooms, False)
+    iterations = 0
+    while candidates:
+        iterations += 1
+        candidate, visited, twice = candidates.pop()
+        for option in rooms[candidate]:
+            if option == "start":
+                continue
+            elif option == "end":
+                total += 1
+            elif option not in visited or option.isupper():
+                candidates.append([
+                    option,
+                    visited + [candidate],
+                    twice
+                ])
+            elif not option.isupper() and twice:
+                candidates.append([
+                    option,
+                    visited + [candidate],
+                    not twice])
     return total
