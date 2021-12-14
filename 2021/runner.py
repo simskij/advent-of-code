@@ -1,5 +1,6 @@
 
 import argparse
+import time
 
 import day01.solution as day01
 import day02.solution as day02
@@ -14,6 +15,7 @@ import day10.solution as day10
 import day11.solution as day11
 import day12.solution as day12
 import day13.solution as day13
+import day14.solution as day14
 
 
 def init_argparse() -> argparse.ArgumentParser:
@@ -42,14 +44,24 @@ def main():
         10: day10.solve,
         11: day11.solve,
         12: day12.solve,
-        13: day13.solve
+        13: day13.solve,
+        14: day14.solve
     }
 
     if not args.day:
         print("Running the solvers for all days...\n")
+        output = []
         for day in switcher:
+            start = time.time_ns()
             silver, gold = switcher.get(day)()
-            print(f"🎁 Day {day}".ljust(10), f"🥈 {silver}".ljust(10), f"🥇 {gold}")
+
+            day = f"🎁 Day {day}".ljust(10)
+            a = f"🥈 {silver}".ljust(10)
+            b = f"🥇 {gold}".ljust(20)
+            t = f"{(time.time_ns() - start) // 1_000} μs".rjust(15)
+
+            output.append(f"{day}{a}{b}{t}")
+        print("\n".join(output))
         return
 
     print(f"Running the solver for day {args.day}...")
