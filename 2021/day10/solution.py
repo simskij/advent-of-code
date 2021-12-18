@@ -3,7 +3,7 @@ from pathlib import Path
 import math
 
 path = Path(__file__).parent / "input.txt"
-
+name = "Syntax Scoring"
 
 matching = {
     '(': ')',
@@ -27,13 +27,25 @@ gold_points = {
 }
 
 
-def solve() -> (int, int):
-    """Day 10: Syntax Scoring"""
-
+def generate():
     with open(path, "r", encoding="utf-8") as file_input:
-        lines = [line.strip() for line in file_input.readlines()]
+        return [line.strip() for line in file_input.readlines()]
 
-    silver_score = 0
+
+def part_1(lines):
+    score = 0
+    for line in lines:
+        expected = []
+        for char in line:
+            if char in "([{<":
+                expected.append(matching[char])
+            elif char in ")]}>":
+                if char != expected.pop():
+                    score += silver_points[char]
+    return str(score)
+
+
+def part_2(lines):
     incomplete = []
     for line in lines:
         expected = []
@@ -44,7 +56,6 @@ def solve() -> (int, int):
                 expected.append(matching[char])
             elif char in ")]}>":
                 if char != expected.pop():
-                    silver_score += silver_points[char]
                     corrupt = True
         if not corrupt:
             expected.reverse()
@@ -57,5 +68,4 @@ def solve() -> (int, int):
             score = score * 5 + gold_points[char]
         scores.append(score)
     middle = math.ceil((len(scores)-1)/2)
-    gold_score = sorted(scores)[middle]
-    return silver_score, gold_score
+    return str(sorted(scores)[middle])

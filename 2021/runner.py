@@ -1,3 +1,4 @@
+from halo import Halo
 
 import argparse
 import time
@@ -16,6 +17,8 @@ import day11.solution as day11
 import day12.solution as day12
 import day13.solution as day13
 import day14.solution as day14
+import day15.solution as day15
+import day16.solution as day16
 
 
 def init_argparse() -> argparse.ArgumentParser:
@@ -32,44 +35,59 @@ def main():
     args = parser.parse_args()
 
     switcher = {
-        1: day01.solve,
-        2: day02.solve,
-        3: day03.solve,
-        4: day04.solve,
-        5: day05.solve,
-        6: day06.solve,
-        7: day07.solve,
-        8: day08.solve,
-        9: day09.solve,
-        10: day10.solve,
-        11: day11.solve,
-        12: day12.solve,
-        13: day13.solve,
-        14: day14.solve
+        1: day01,
+        2: day02,
+        3: day03,
+        4: day04,
+        5: day05,
+        6: day06,
+        7: day07,
+        8: day08,
+        9: day09,
+        10: day10,
+        11: day11,
+        12: day12,
+        13: day13,
+        14: day14,
+        15: day15,
+        16: day16
     }
 
-    if not args.day:
-        print("Running the solvers for all days...\n")
-        output = []
-        for day in switcher:
-            start = time.time_ns()
-            silver, gold = switcher.get(day)()
+    if args.day:
+        day = switcher.get(args.day)
+        filtered = {}
+        filtered[args.day] = day
+        switcher = filtered
+    spinner = Halo(text="Running solvers...", spinner="dots")
+    spinner.start()
 
-            day = f"🎁 Day {day}".ljust(10)
-            a = f"🥈 {silver}".ljust(10)
-            b = f"🥇 {gold}".ljust(20)
-            t = f"{(time.time_ns() - start) // 1_000} μs".rjust(15)
+    output = []
+    for day in switcher:
+        def get_diff(start, end):
+            return f"{(end - start) // 1_000} μs"
+        solver = switcher.get(day)
+        start = time.time_ns()
+        data = solver.generate()
+        after_gen = get_diff(start, time.time_ns())
 
-            output.append(f"{day}{a}{b}{t}")
-        print("\n".join(output))
-        return
+        start = time.time_ns()
+        silver = switcher.get(day).part_1(data)
+        after_silver = get_diff(start, time.time_ns())
 
-    print(f"Running the solver for day {args.day}...")
-    silver, gold = switcher.get(args.day, "Invalid day")()
-    print(f"🥈 {silver}\n🥇 {gold}")
 
+        start = time.time_ns()
+        gold = switcher.get(day).part_2(data)
+        after_gold = get_diff(start, time.time_ns())
+
+        # day = f"🎁 Day {day}: {switcher.get(day).name}"
+        g = f"⚡ {after_gen.rjust(10)}"
+        a = f"🥈 {silver.ljust(20)} {after_silver.rjust(10)}"
+        b = f"🥇 {gold.ljust(20)} {after_gold.rjust(15)}"
+        # output.append(f"{day}\n\n{g}{a}\n{' '*13}{b}\n{divider}")
+        output.append(f"🎁 {str(day).zfill(2)} - {solver.name.ljust(30)} {g} {a} {b}")
+    spinner.succeed("Solvers completed")
+    print("\n" + ('\n'.join(output)))
     return
-
 
 if __name__ == "__main__":
     main()

@@ -2,11 +2,10 @@
 from pathlib import Path
 
 path = Path(__file__).parent / "input.txt"
+name = "Passage Pathing"
 
 
-def solve() -> (int, int):
-    """Day 12: Passage Pathing"""
-
+def generate():
     with open(path, "r", encoding="utf-8") as file_input:
         lines = [line.strip() for line in file_input.readlines()]
 
@@ -23,11 +22,15 @@ def solve() -> (int, int):
             rooms[right] = [left]
         elif left not in rooms[right]:
             rooms[right].append(left)
+    return rooms
 
-    return (
-        travel("start", [], rooms),
-        travel("start", [], rooms, True)
-    )
+
+def part_1(rooms):
+    return str(travel("start", [], rooms))
+
+
+def part_2(rooms):
+    return str(travel("start", [], rooms, True))
 
 
 def travel(current, visited, rooms, allow_twice=False) -> int:

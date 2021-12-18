@@ -3,27 +3,31 @@ from pathlib import Path
 from itertools import product
 
 path = Path(__file__).parent / "input.txt"
+name = "Hydrothermal Venture"
 
 
-def solve() -> int:
-    """Count overlap"""
-
+def generate():
     with open(path, "r", encoding="utf-8") as file_input:
         lines = file_input.readlines()
-    
+
     vents = []
     for line in lines:
         start, stop = line.split("->")
         vents.append(
           Vent(Coord(start), Coord(stop))
         )
+    return vents
 
-    return (
-        count_overlaps(vents, False),
-        count_overlaps(vents, True),
-    )
 
-def count_overlaps(vents, include_diagonal: bool) -> int:
+def part_1(vents):
+    return str(count_overlaps(vents))
+
+
+def part_2(vents):
+    return str(count_overlaps(vents, True))
+
+
+def count_overlaps(vents, include_diagonal: bool = False) -> int:
     matrix = [[0 for y in range(1000)] for x in range(1000)]
 
     if not include_diagonal:

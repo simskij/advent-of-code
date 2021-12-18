@@ -3,22 +3,18 @@ from pathlib import Path
 import math
 
 path = Path(__file__).parent / "input.txt"
-
+name = "Smoke Basin"
 NEIGHBOURS = (0, 1), (0, -1), (1, 0), (-1, 0)
 
-def solve() -> (int, int):
-    """Day 8: Seven Segment Search"""
-    
+
+def generate():
     entries = []
     with open(path, "r", encoding="utf-8") as file_input:
         lines = file_input.readlines()
         for line in lines:
             entries.append([int(height) for height in line.strip()[0:]])
     low_points = get_low_points(entries)
-    return (
-        solve_silver(entries, low_points),
-        solve_gold(entries, low_points)
-    )
+    return [entries, low_points]
 
 
 def get_low_points(board):
@@ -28,11 +24,6 @@ def get_low_points(board):
             if is_low_point(y, x, board):
                 low_points.append([y, x])
     return low_points
-
-
-def solve_silver(board, low_points) -> int:
-    risks = [ (board[p[0]][p[1]] + 1) for p in low_points]
-    return sum(risks)
 
 
 def is_low_point(y, x, rows):
@@ -48,7 +39,14 @@ def is_low_point(y, x, rows):
     return True
 
 
-def solve_gold(rows, low_points) -> int:
+def part_1(data):
+    board, low_points = data
+    risks = [ (board[p[0]][p[1]] + 1) for p in low_points]
+    return str(sum(risks))
+
+
+def part_2(data):
+    rows, low_points = data
     seen = set()
     sizes = []
     candidates = []
@@ -77,4 +75,4 @@ def solve_gold(rows, low_points) -> int:
                 candidates.append([y+ay, x+ax])
                 seen.add((y+ay, x+ax))
         sizes.append(size)
-    return math.prod(sorted(sizes, reverse=True)[:3])
+    return str(math.prod(sorted(sizes, reverse=True)[:3]))

@@ -8,8 +8,9 @@ class Entry:
         self.direction = direction
         self.distance = distance
 
+name = "Dive!"
 
-def solve():
+def generate():
 
     entries = []
     with open(path, "r") as file_input:
@@ -18,9 +19,10 @@ def solve():
             segments = line.split()
             entries.append(Entry(segments[0], int(segments[1])))
 
-    return solve_part1(entries), solve_part2(entries)
+    return entries
 
-def solve_part1(entries) -> int:
+
+def part_1(entries) -> str:
     depth = 0
     length = 0
 
@@ -32,9 +34,10 @@ def solve_part1(entries) -> int:
         if entry.direction == "up":
             depth -= entry.distance
 
-    return depth * length
+    return str(depth * length)
 
-def solve_part2(entries) -> int:
+
+def part_2(entries) -> str:
     depth = 0
     length = 0
     aim = 0
@@ -48,6 +51,5 @@ def solve_part2(entries) -> int:
         if entry.direction == "up":
             aim -= entry.distance
 
-    return depth * length
+    return str(depth * length)
 
-solve()

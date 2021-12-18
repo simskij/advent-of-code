@@ -7,7 +7,7 @@ from matplotlib import animation
 from os.path import expanduser
 
 path = Path(__file__).parent / "input.txt"
-
+name = "Dumbo Octopus"
 
 NEIGHBOURS = (
     (-1, -1),
@@ -20,17 +20,10 @@ NEIGHBOURS = (
     (1, 1)
 )
 
-animate =  False
+animate = False
 
-def solve() -> (int, int):
-    """Day 11: Dumbo Octopus"""
-
-    states = []
+def generate():
     board = []
-    gold = 0
-
-    silver = 0
-    step = 0
 
     with open(path, "r", encoding="utf-8") as file_input:
         lines = [line.strip() for line in file_input.readlines()]
@@ -39,7 +32,24 @@ def solve() -> (int, int):
     height = len(board)
     width = len(board[0])
 
-    while not gold:
+    return [board, height, width]
+
+
+def part_1(data):
+    board, height, width = data
+    return str(solve(board, height, width))
+
+
+def part_2(data):
+    board, height, width = data
+    return str(solve(board, height, width, True))
+
+
+def solve(board, height, width, untilSyncing: bool = False):
+    states = []
+    step = 0
+    total = 0
+    while True:
         step += 1
         flashed = []
         flashing = []
@@ -75,14 +85,15 @@ def solve() -> (int, int):
         if animate:
             states.append([[col for col in row] for row in board])
         if step <= 100:
-            silver += len(flashed)
-        if len(flashed) == height * width:
-            gold = step
+            total += len(flashed)
+        elif not untilSyncing:
+            return total
+        elif len(flashed) == height * width:
+            if animate:
+                animate_states(states)
+            return step
 
-    if animate:
-        animate_states(states)
 
-    return silver, gold
 
 
 def animate_states(states):

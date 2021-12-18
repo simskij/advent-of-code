@@ -3,26 +3,37 @@ from pathlib import Path
 
 
 path = Path(__file__).parent / "input.txt"
+name = "The Treachery of Whales"
 
 
-def solve() -> int:
-    """Calculate fuel consumption to align crabs"""
-
+def generate():
     with open(path, "r", encoding="utf-8") as file_input:
         lines = file_input.readlines()
         positions = [int(line) for line in lines[0].split(',')]
 
-    silver_totals = []
-    gold_totals = []
+    return positions
+
+
+def part_1(positions) -> str:
+    return str(solve(positions))
+
+
+def part_2(positions) -> str:
+    return str(solve(positions, True))
+
+
+def solve(positions, gold: bool = False) -> int:
+    """Calculate fuel consumption to align crabs"""
+    totals = []
     for i in range(max(positions)):
-        silver_total = 0
-        gold_total = 0
+        total = 0
         for crab in positions:
             distance = abs(crab - i)
             # doable using sum(range(distance), but at a much
             # higher cost than just calculating the triangular number
-            gold_total += distance * (distance + 1) // 2
-            silver_total += abs(crab - i)
-        gold_totals.append(gold_total)
-        silver_totals.append(silver_total)
-    return min(silver_totals), min(gold_totals)
+            if gold:
+                total += distance * (distance + 1) // 2
+            else:
+                total += abs(crab - i)
+        totals.append(total)
+    return min(totals)

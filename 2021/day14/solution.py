@@ -5,14 +5,10 @@ from collections import defaultdict
 
 
 path = Path(__file__).parent / "input.txt"
+name = "Extended Polymerization"
 
 
-def solve(do_print=False) -> (int, int):
-    """Day 14: Extended Polymerization"""
-
-    silver = 0
-    gold = 0
-
+def generate():
     with open(path, "r", encoding="utf-8") as file_input:
         lines = [line.strip() for line in file_input.readlines()]
 
@@ -27,8 +23,21 @@ def solve(do_print=False) -> (int, int):
         if i == 0:
             continue
         counts[sequence[i-1:i+1]] += 1
+    return [pairs, counts, singles]
 
-    for i in range(1, 41):
+
+def part_1(data):
+    pairs, counts, singles = data
+    return str(solve(pairs.copy(), counts.copy(), singles.copy(), 10))
+
+
+def part_2(data):
+    pairs, counts, singles = data
+    return str(solve(pairs.copy(), counts.copy(), singles.copy(), 40))
+
+
+def solve(pairs, counts, singles, limit):
+    for i in range(1, (limit + 1)):
         new_counts = defaultdict(int)
         for pair, count in counts.items():
 
@@ -39,12 +48,5 @@ def solve(do_print=False) -> (int, int):
             singles[inj] += count
             new_counts[left] += count
             new_counts[right] += count
-
-        if i == 10:
-            silver = max(singles.values()) - min(singles.values())
-
         counts = new_counts
-
-    gold = max(singles.values()) - min(singles.values())
-
-    return silver, gold
+    return max(singles.values()) - min(singles.values())

@@ -3,17 +3,21 @@ from pathlib import Path
 
 path = Path(__file__).parent / "input.txt"
 
+name = "Sonar Sweep"
 
-def solve():
-    entries = []
+def generate():
     with open(path, "r") as file_input:
         entries = file_input.readlines()
 
         for i, entry in enumerate(entries):
             entries[i] = int(entry.strip())
+    return entries
+
+def solve(entries):
 
     solution_1 = part_1(entries)
     solution_2 = part_2(entries)
+
     return solution_1, solution_2
 
 
@@ -30,7 +34,7 @@ def part_1(entries) -> str:
 def part_2(entries) -> str:
     last = entries[0] + entries[1] + entries[2]
     increases = 0
-    for i, _ in enumerate(entries[1:]): 
+    for i, _ in enumerate(entries[1:]):
         if i+2 >= len(entries):
             break
         window = entries[i] + entries[i+1] + entries[i+2]

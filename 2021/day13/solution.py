@@ -1,13 +1,13 @@
 """Day 13: Transparent Origami"""
 from pathlib import Path
 from functools import reduce
+from advent_of_code_ocr import convert_6
 
 path = Path(__file__).parent / "input.txt"
+name = "Transparent Origami"
 
 
-def solve(do_print=False) -> (int, int):
-    """Day 13: Transparent Origami"""
-
+def generate():
     folds = []
     coords = []
 
@@ -28,13 +28,23 @@ def solve(do_print=False) -> (int, int):
     for x, y in coords:
         board[y][x] = True
 
+    return [board, folds]
+
+
+def part_1(data) -> str:
+    board, folds = data
+    board = fold(board, folds[0])
+    summed = sum([sum(row) for row in board])
+
+    return str(summed)
+
+
+def part_2(data) -> str:
+    board, folds = data
     for f in folds:
         board = fold(board, f)
 
-    if do_print:
-        print_board(board)
-
-    return sum([sum(row) for row in board]), -1
+    return read_board(board)
 
 
 def fold(board, where):
@@ -63,12 +73,11 @@ def fold(board, where):
     return a
 
 
-def print_board(board):
-    print(
+def read_board(board):
+    return convert_6(
         "\n".join([
             "".join([
                 '.' if dot is False else '#' for dot in line
             ]) for line in board
-        ])
-    )
+        ]))
 

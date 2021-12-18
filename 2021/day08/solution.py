@@ -3,11 +3,12 @@ from pathlib import Path
 
 
 path = Path(__file__).parent / "input.txt"
+name = "Seven Segment Search"
 
 
-def solve() -> int:
+def generate():
     """Day 8: Seven Segment Search"""
-    
+
     entries = []
     with open(path, "r", encoding="utf-8") as file_input:
         lines = file_input.readlines()
@@ -19,13 +20,10 @@ def solve() -> int:
                 )
             entries.append([wires, segments])
 
-        return (
-            solve_silver(entries), 
-            solve_gold(entries)
-        )
+    return entries
 
 
-def solve_silver(entries) -> int:
+def part_1(entries) -> int:
     silver = 0
     for _, segments in entries:
         for segment in segments:
@@ -33,15 +31,15 @@ def solve_silver(entries) -> int:
             silver += 1 if len(segment) == 4 else 0  # 4
             silver += 1 if len(segment) == 3 else 0  # 7
             silver += 1 if len(segment) == 7 else 0  # 8
-    return silver
+    return str(silver)
 
 
-def solve_gold(entries) -> int:
-    sum = 0
+def part_2(entries) -> int:
+    summed = 0
     for entry in entries:
         result = solve_gold_entry(entry)
-        sum += result
-    return sum
+        summed += result
+    return str(summed)
 
 def solve_gold_entry(entry) -> int:
     entries = entry
@@ -53,7 +51,7 @@ def solve_gold_entry(entry) -> int:
     nums[8] = find(lambda x: len(x) == 7, entries[0])
     nums[3] = find(lambda x: len(x) == 5 and contains(x, nums[1]), entries[0])
     nums[9] = "".join(set(f"{nums[4]}{nums[3]}"))
-    
+
     nums[0] = find(
         (
             lambda x: len(x) == 6
