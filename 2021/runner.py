@@ -19,7 +19,12 @@ import day13.solution as day13
 import day14.solution as day14
 import day15.solution as day15
 import day16.solution as day16
-
+import day17.solution as day17
+import day18.solution as day18
+import day19.solution as day19
+import day21.solution as day21
+import day22.solution as day22
+import day23.solution as day23
 
 def init_argparse() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -50,7 +55,13 @@ def main():
         13: day13,
         14: day14,
         15: day15,
-        16: day16
+        16: day16,
+        17: day17,
+        18: day18,
+        19: day19,
+        21: day21,
+        22: day22,
+        23: day23,
     }
 
     if args.day:
